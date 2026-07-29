@@ -9,6 +9,8 @@ import { Analytics } from './screens/Analytics';
 import { ForecastScreen } from './screens/Forecast';
 import { Goal } from './screens/Goal';
 import { Profile } from './screens/Profile';
+import { DreamMode } from './screens/DreamMode';
+import { DreamModeButton } from './billing/DreamEntry';
 import { Nav, type Route } from './components/Nav';
 import { AddSheet } from './components/AddSheet';
 import { SalaryAllocator } from './components/SalaryAllocator';
@@ -27,6 +29,7 @@ function Shell() {
   const [route, setRoute] = useState<Route>('home');
   const [add, setAdd] = useState(false);
   const [salary, setSalary] = useState(false);
+  const [dream, setDream] = useState(false);
   const [editing, setEditing] = useState<Tx | null>(null);
   const scroller = useRef<HTMLDivElement>(null);
 
@@ -45,7 +48,12 @@ function Shell() {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            {route === 'home' && <Home onRoute={setRoute} onSalary={() => setSalary(true)} />}
+            {route === 'home' && (
+              <>
+                <Home onRoute={setRoute} onSalary={() => setSalary(true)} />
+                <DreamModeButton onOpen={() => setDream(true)} />
+              </>
+            )}
             {route === 'money' && (
               <Money
                 onSalary={() => setSalary(true)}
@@ -86,6 +94,8 @@ function Shell() {
       />
 
       <SalaryAllocator open={salary} onClose={() => setSalary(false)} />
+
+      <DreamMode open={dream} onClose={() => setDream(false)} />
 
       <Toasts />
     </div>

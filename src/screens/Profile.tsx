@@ -17,6 +17,7 @@ import { money, uid } from '../lib/format';
 import { useInstall } from '../lib/install';
 import { permission, requestPermission } from '../lib/notifications';
 import type { Category } from '../types';
+import { PlanSection } from '../billing/PlanSection';
 
 export function Profile() {
   const { state, user, txs, balances, forecast, patch, signOut, wipe, toast, mode } = useApp();
@@ -96,6 +97,8 @@ export function Profile() {
       </GoalImage>
 
       <div className="mx-auto max-w-lg space-y-6 px-4 pt-5">
+        <PlanSection />
+
         <div>
           <SectionTitle
             action={

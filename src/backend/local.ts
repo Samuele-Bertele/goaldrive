@@ -1,5 +1,6 @@
 import type { AppState, SessionUser, Tx } from '../types';
 import type { Backend, Unsubscribe } from './index';
+import { parseEntitlement } from '../billing/access';
 
 const K = {
   users: 'goaldrive:users',
@@ -98,6 +99,21 @@ export function localBackend(): Backend {
       txListeners.get(uid)!.add(cb);
       queueMicrotask(() => cb(read<Tx[]>(K.txs(uid), [])));
       return () => txListeners.get(uid)?.delete(cb) as unknown as void;
+    },
+
+    subscribeEntitlement(uid, cb): Unsubscribe {
+      // In modalità locale i diritti si simulano da localStorage:
+      //   localStorage.setItem('gd:ent:' + uid, JSON.stringify({ plan: 'PREMIUM' }))
+      queueMicrotask(() => {
+        const raw = localStorage.getItem('gd:ent:' + uid);
+        if (!raw) return cb(null);
+        try {
+          cb(parseEntitlement(JSON.parse(raw)));
+        } catch {
+          cb(null);
+        }
+      });
+      return () => {};
     },
 
     async putTx(uid, tx) {

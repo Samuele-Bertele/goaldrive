@@ -22,6 +22,7 @@ import {
 } from 'firebase/firestore';
 import type { AppState, SessionUser, Tx } from '../types';
 import type { Backend } from './index';
+import { parseEntitlement } from '../billing/access';
 
 const config = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -52,6 +53,7 @@ export function firebaseBackend(): Backend {
 
   const stateDoc = (uid: string) => doc(init().db, 'users', uid);
   const txCol = (uid: string) => collection(init().db, 'users', uid, 'transactions');
+  const entDoc = (uid: string) => doc(init().db, 'entitlements', uid);
 
   return {
     mode: 'firebase',
@@ -91,6 +93,15 @@ export function firebaseBackend(): Backend {
         txCol(uid),
         (snap) => cb(snap.docs.map((d) => d.data() as Tx)),
         () => cb([]),
+      );
+    },
+
+    subscribeEntitlement(uid, cb) {
+      return onSnapshot(
+        entDoc(uid),
+        (snap) => cb(snap.exists() ? parseEntitlement(snap.data()) : null),
+        // Se le regole negano la lettura o la rete cade, si resta sul piano gratuito.
+        () => cb(null),
       );
     },
 

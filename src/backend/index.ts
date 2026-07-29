@@ -1,4 +1,5 @@
 import type { AppState, SessionUser, Tx } from '../types';
+import type { Entitlement } from '../billing/access';
 import { localBackend } from './local';
 import { firebaseBackend, hasFirebaseConfig } from './firebase';
 
@@ -13,6 +14,8 @@ export interface Backend {
   subscribeState(uid: string, cb: (state: AppState | null) => void): Unsubscribe;
   saveState(uid: string, state: AppState): Promise<void>;
   subscribeTx(uid: string, cb: (txs: Tx[]) => void): Unsubscribe;
+  /** Diritti dell'account: sola lettura dal client, si scrive solo lato server. */
+  subscribeEntitlement(uid: string, cb: (e: Entitlement | null) => void): Unsubscribe;
   putTx(uid: string, tx: Tx): Promise<void>;
   deleteTx(uid: string, id: string): Promise<void>;
   wipe(uid: string): Promise<void>;
