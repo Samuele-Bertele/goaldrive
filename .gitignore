@@ -1,0 +1,26 @@
+# Dipendenze
+node_modules/
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+# Build
+dist/
+dev-dist/
+
+# Ambiente
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# PWA
+sw.js
+workbox-*.js
