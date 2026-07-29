@@ -1,0 +1,194 @@
+@import 'tailwindcss';
+
+@import '@fontsource-variable/manrope';
+@import '@fontsource-variable/plus-jakarta-sans';
+
+@theme {
+  --color-bg: #0a0a0a;
+  --color-surface: #151515;
+  --color-card: #1e1e1e;
+  --color-line: #262626;
+  --color-primary: #00c853;
+  --color-secondary: #00e676;
+  --color-accent: #b9f6ca;
+  --color-ink: #ffffff;
+  --color-mute: #b5b5b5;
+  --color-danger: #ff5d5d;
+
+  --font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv01';
+    overscroll-behavior-y: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Numeri: sempre allineati in colonna, mai "ballerini" */
+  .num {
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font-family: inherit;
+  }
+
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+
+@layer components {
+  /* ---------- Superfici ---------- */
+
+  .card {
+    background: var(--color-card);
+    border: 1px solid color-mix(in srgb, var(--color-ink) 6%, transparent);
+    border-radius: 24px;
+  }
+
+  .glass {
+    background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid color-mix(in srgb, var(--color-ink) 8%, transparent);
+  }
+
+  .glow {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-primary) 22%, transparent),
+      0 12px 40px -18px color-mix(in srgb, var(--color-primary) 70%, transparent);
+  }
+
+  .glow-soft {
+    box-shadow: 0 18px 60px -30px color-mix(in srgb, var(--color-primary) 60%, transparent);
+  }
+
+  /* ---------- Firma visiva: il velo ---------- */
+  /* La foto dell'obiettivo si "svela" man mano che il risparmio cresce.
+     0% = ricordo sfocato e spento · 100% = il sogno, nitido e presente. */
+
+  .veil-img {
+    transition:
+      filter 1200ms var(--ease-out-quint),
+      transform 1200ms var(--ease-out-quint);
+  }
+
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- Layout ---------- */
+
+  .safe-top {
+    padding-top: max(env(safe-area-inset-top), 12px);
+  }
+
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 12px);
+  }
+
+  .app-scroll {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  /* ---------- Micro-interazioni ---------- */
+
+  .press {
+    transition:
+      transform 180ms var(--ease-out-quint),
+      background-color 180ms ease,
+      opacity 180ms ease;
+  }
+  .press:active {
+    transform: scale(0.972);
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      100deg,
+      transparent 20%,
+      color-mix(in srgb, var(--color-accent) 26%, transparent) 45%,
+      transparent 70%
+    );
+    background-size: 220% 100%;
+    animation: shimmer 2.6s linear infinite;
+  }
+
+  @keyframes shimmer {
+    from {
+      background-position: 180% 0;
+    }
+    to {
+      background-position: -60% 0;
+    }
+  }
+
+  .rise {
+    animation: rise 620ms var(--ease-out-quint) both;
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
