@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // `base` è configurabile per il deploy in sottocartella (es. GitHub Pages: BASE=/goaldrive/)
-const base = process.env.BASE ?? '/'
+const base = process.env.BASE ?? '/goaldrive/'  // ← aggiungi '/goaldrive/'
 
 export default defineConfig({
   base,
